@@ -1,10 +1,9 @@
 class Entity
-    attr_accessor :name, :stat_hp, :stat_atk, :stat_def, :stat_spd, :damage_min, :damage_max, :base_xp, :total_xp, :text
+    attr_accessor :name, :stat_hp, :stat_atk, :stat_def, :stat_spd, :damage_min, :damage_max, :base_xp
 
     def initialize(name, hp, atk, defense, spd, min, max, xp)
         @name = name
         @stat_hp = hp
-        #puts("HP Const: " +@stat_hp.to_s)
         @stat_atk = atk
         @stat_def = defense
         @stat_spd = spd
@@ -54,13 +53,16 @@ class Entity
 
         # Generates a random number between 1 - sum inclusive
         stat_roll = rand(sum) + 1
-        xp_bonus = 0
+
+        # Counts the number of stats given.  Isn't as important for the player, but is used
+        # to evaluation bonus XP that an enemy gives
+        extra_roll_count = 0
 
         for i in dict_stat_chance.values
             stat_roll -= i
-            xp_bonus += 1
+            extra_roll_count += 1
             if stat_roll <= 0
-                return dict_stat_chance.key(i), xp_bonus
+                return dict_stat_chance.key(i), extra_roll_count
             end
         end
 
