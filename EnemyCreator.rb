@@ -5,29 +5,25 @@ similar enemies with small differences (e.g. 5 different slimes that grow in att
 
 However, it is tedious to create these enemies
 """
-require_relative 'Enemy.rb'
+require_relative "./Enemy.rb"
 
 module EnemyCreator
 
 
     def self.slime
         
-        slime = Enemy.new("Slime", 15, 1, 1, 1, 1, 10, 10)
+        enemy = Enemy.new("Slime", 25, 1, 1, 1, 3, 5)
 
-        xp_bonus = Array.new(4)
-        roll_hp, xp_bonus[0] = slime.roll_stat({ 0=>10 , 1=>15, 2=>20 , 3=>20 , 4=>5 , 5=>15 , 6=>10, 7=>5 })
-        roll_atk, xp_bonus[1] = slime.roll_stat({ 1=>85 , 2=>15 })
-        roll_def, xp_bonus[2] = slime.roll_stat({ 1=>85 , 2=>15 })
-        roll_spd, xp_bonus[3] = slime.roll_stat({ 1=>85 , 2=>15 })
-
-
-        slime.stat_hp += roll_hp
-        slime.stat_atk += roll_atk
-        slime.stat_def += roll_def
-        slime.stat_spd += roll_spd
+        xp_bonus = Array.new(3)
+        roll_hp, xp_bonus[0] = enemy.roll_stat([ 10 , 7 , 3])
+        roll_atk, xp_bonus[1] = enemy.roll_stat([ 1 ])
+        roll_def, xp_bonus[2] = enemy.roll_stat([ 19 , 1 ])
+        enemy.stat_hp += roll_hp
+        enemy.stat_atk += roll_atk
+        enemy.stat_def += roll_def
 
         for i in xp_bonus
-            slime.total_xp += (slime.base_xp * 0.1 * i).ceil()
+          enemy.xp += (enemy.base_xp * 0.1 * i).ceil()
         end
 
         text = <<-'EOF'
@@ -42,23 +38,108 @@ module EnemyCreator
    *@%,.,,,,,,,.,,,,,,,&@    
        @@@@#//%#@@@,       
 EOF
-        slime.set_text(text)
-        return slime
+        enemy.set_text(text)
+        return enemy
     end
 
 
     def self.gnome
-        gnome = Enemy.new("Gnome", 1, 1, 1, 1, 1, 1, 1)
-        text = "gnome_placeholder"
-        gnome.set_text(text)
-        return gnome
+        enemy = Enemy.new("Gnome", 20, 1, 3, 3, 5, 10)
+
+        xp_bonus = Array.new(3)
+        roll_hp, xp_bonus[0] = enemy.roll_stat([ 3 , 4 , 4 , 3 , 3 , 2 , 1 ])
+        roll_atk, xp_bonus[1] = enemy.roll_stat([ 17 , 3 ])
+        roll_def, xp_bonus[2] = enemy.roll_stat([ 17 , 3 ])
+        enemy.stat_hp += roll_hp
+        enemy.stat_atk += roll_atk
+        enemy.stat_def += roll_def
+
+        puts(xp_bonus.length())
+
+        for i in xp_bonus
+          enemy.xp += (enemy.base_xp * 0.3 * i.to_f).ceil()
+        end
+
+        text = <<-'EOF'       
+     %%%%%%   
+    %  %%%%%%%%                                                                
+        %%%%%%%%%%&
+        %%%%%%%%%%%%%#
+       #&*,,,,,,,,,,,,
+       **,,,,,***/**,,
+        *,,**,*/****,,
+      %@&/*,,,**//*,,,
+    @&@@@@@,,,,,,,,,,,@&@,
+   &&@@@@&&@@/,,,,,,,@@&(****/(/
+   &,****#@&@&&&&&&&&,@@@  *  .
+     **/%**@@&&&&&&&#
+       .&#&&&&@&&&&&
+        &&&&&%@&&&&
+         %%%%(%&&&%
+        #@@@@@@@@@@
+      .,,@@@@,(@@@ ....
+.,,,,,,,,#@@@@&@@@@@@@ ,,,.....
+...,,,,,,...(&@@@@......,,,.......
+EOF
+        enemy.set_text(text)
+        return enemy
     end
 
 
+    def self.bear
+      enemy = Enemy.new("Wild Bear", 40, 2, 3, 5, 7, 30)
+
+      xp_bonus = Array.new(3)
+      roll_hp, xp_bonus[0] = enemy.roll_stat([ 0 , 0 , 0 , 0 , 4 , 4 , 4 , 4 ])
+      roll_atk, xp_bonus[1] = enemy.roll_stat([ 3 , 17 ])
+      roll_def, xp_bonus[2] = enemy.roll_stat([ 0 , 20 ])
+      enemy.stat_hp += roll_hp
+      enemy.stat_atk += roll_atk
+      enemy.stat_def += roll_def
+
+      puts(xp_bonus.length())
+
+      for i in xp_bonus
+        enemy.xp += (enemy.base_xp * 0.3 * i.to_f).ceil()
+      end
+
+      text = <<-'EOF'       
+                                  # .   **/(//*#                 
+                           //#/(///(*  // %#. */(///(#(#((/(/*..**              
+                       (####((#%##(*/////* //(#((%((#%#((  * .   ... ..**/( /((%(
+                  ((%%#%%%&&%##((#(/*//*/(%#%#%%%#&#((((*##&&&////((##//*/*#&@&(
+               *#(#%%&&&@@@(((#(#%(/( /(##&#%%&&%%#(#(###/%&(%/#(//###&(#//%&%&/
+            **//#&&&@&@@@&####(#((#//*/(%&&&&&##%&%%%#(%&///#(&##%&%(##%#(###%# 
+         /*((/(#&%&%%@@@&%###(#(##((///&&%&%&%&%%&&&%%##/((#/(##%#%(&#%##%@@%&%&
+        /*/##(##&#%&%&@%%####(###(#((%%%@%&%@(%%@&%#(###(///(((@&&&&&%#* /(%&@& 
+       %(/(#%##(##%&%@@%%##%%%%&#%%#%%&&%%&%&#%&@&#&&(%(/##&&(#&&&@&%/ ( ##(@%  
+       //%#%(%&%&#&&&&&&%%#&#%%%%%&(%&@%@#&##@@@@@&%@%#&#&&&&%#@@@@&//*%%@@@@   
+       (#%#%%#%@&%@&&@@&&&&&&&&%%%#%%#@&&#&@&@@@@@@@@@@&&&&&@@@&@@@%&&&&@@@@&   
+      %/##%%#&&&&&@@@@&@@@&@@@@%&%(%%&&&&%%@@@@@@@@@@@@@@@@@@@@@@@&&@&@@@@      
+       *%&%%&%%&@&@@@@@@@@&@@@@&@##&&&%&@%&&@&@@@@@@@@@@@@@@@@@@@@@@@@@@@/      
+       /#&&@@@&@@@@@@@@@@@@@@@@@&#%%@&@@@@@&@@@@@@@@@@@@@@@@@@@@@@@@@@@@@&      
+       #&%@@&@@@@@@@@@@@@@@@@@@@&&&&@@@@@@@@@@@@@@@@@*   /@@@@@@@@@@@@@@@&      
+     (#&&@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@        @@@@@@@@@@@@@@%      
+   &#&&@@@@@@@@@@@@@@@@@@@@@@@@@@&@@@@@@@@@@@@@@@          @@@@@@@@@@@@@@@      
+ %%&@@@@@@@@@@@@@@@@@@@@@@@@@@@@ &@@@@@@@@@@@@@            @@@@@@@@@@@@@@&      
+%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  &@@@@@@@@@@@@             @@@@@@@@@@@@@@       
+ @@@@@@@@@@@@      &@@@@@@@@@@    @@@@@@@@@@@&              &@@@@@@@@@@@&       
+ @@@@@@@@@         &@@@@@@@@@(     @@@@@@@@@@(               @@@@@@@@@@@@       
+  @@@@@@@@#        &@@@@@@@@@       @@@@@@@@@                  @@@@@@@@@        
+    @@@@@@@        &@@@@@@@@         @@@@@@@@@                  @@@@@@@@@@      
+        /@@        /@@@@@@@@@@@@      @@@@@@@@@%                    /@%@%#@%@   
+                       (##@(                (&@(
+EOF
+      enemy.set_text(text)
+      return enemy
+  end
+
     
     def self.dragon_infinity
-        dragon = Enemy.new("Infinity Dragon", 2000, 80, 11, 11, 111, 777, 800)
-        
+        enemy = Enemy.new("Ouroboros", 2000, 80, 11, 111, 777, 800)
+        roll_hp, xp_bonus[0] = enemy.roll_stat([ 1 ])
+        roll_atk, xp_bonus[1] = enemy.roll_stat([ 1 ])
+        roll_def, xp_bonus[2] = enemy.roll_stat([ 1 ])
         text = <<-'EOF'
                  (**((,******,(***,   ,                                      ,((**,, ,,(((#((,.
             (*****(******************,****,                                ,*****,*#********,,,,,,,.,
@@ -85,7 +166,7 @@ EOF
              **************,*/**  *** *                               ,******************************,
                     **********//                                           ********************,.
 EOF
-        dragon.set_text(text)
-        return dragon
+        enemy.set_text(text)
+        return enemy
     end
 end

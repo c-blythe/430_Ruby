@@ -1,16 +1,14 @@
 class Entity
-    attr_accessor :name, :stat_hp, :stat_atk, :stat_def, :stat_spd, :damage_min, :damage_max, :base_xp
+    attr_accessor :name, :stat_hp, :stat_atk, :stat_def, :damage_min, :damage_max, :xp, :text
 
-    def initialize(name, hp, atk, defense, spd, min, max, xp)
+    def initialize(name, hp, atk, defense, min, max, xp)
         @name = name
         @stat_hp = hp
         @stat_atk = atk
         @stat_def = defense
-        @stat_spd = spd
         @damage_min = min
         @damage_max = max
-        @base_xp = xp
-        @total_xp = xp
+        @xp = xp
     end
 
     def damage_roll
@@ -42,30 +40,23 @@ class Entity
     10% of stat +4
      5% of stat +5
     """
-    def roll_stat(dict_stat_chance)
+    def roll_stat(list_stat_chance)
         sum = 0
-        for i in dict_stat_chance.values
+        for i in list_stat_chance
             sum += i
-        end
-        if sum != 100
-            raise "The chances of rolling all stats does not equal 100"
         end
 
         # Generates a random number between 1 - sum inclusive
         stat_roll = rand(sum) + 1
+        xp_bonus = 0
 
-        # Counts the number of stats given.  Isn't as important for the player, but is used
-        # to evaluation bonus XP that an enemy gives
-        extra_roll_count = 0
-
-        for i in dict_stat_chance.values
-            stat_roll -= i
-            extra_roll_count += 1
+        for i in 0...list_stat_chance.length()
+            stat_roll -= list_stat_chance[i]
+            xp_bonus += 1
             if stat_roll <= 0
-                return dict_stat_chance.key(i), extra_roll_count
+                return i, xp_bonus
             end
-        end
-
+        end 
         raise "It appears stat_roll was out of bounds.  Maybe check the percentage sum?"
         return nil
     end
